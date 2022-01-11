@@ -1,0 +1,9 @@
+name: TradePlugin
+version: ${project.version}
+main: com.ceylon.trade.TradePlugin
+api-version: 1.18
+commands:
+  교환:
+    description: 'trade'
+  장사글:
+    description: 'trade broadcast'
