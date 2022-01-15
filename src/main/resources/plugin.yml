@@ -6,4 +6,4 @@ commands:
   교환:
     description: 'trade'
   장사글:
-    description: 'trade broadcast'
+    description: 'trade sign'

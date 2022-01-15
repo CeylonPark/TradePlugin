@@ -8,6 +8,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 
 public final class TradePlugin extends JavaPlugin {
+    public static final double NEARBY_SIZE_X = 10;
+    public static final double NEARBY_SIZE_Y = 30;
+    public static final double NEARBY_SIZE_Z = 10;
     public final static String prefix = "§f[ §aTrade §f] ";
     private final TradeManager tradeManager;
 

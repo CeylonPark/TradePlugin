@@ -2,6 +2,7 @@ package com.ceylon.trade.command;
 
 import com.ceylon.trade.TradePlugin;
 import com.ceylon.trade.api.SubCommand;
+import com.ceylon.trade.data.TradeData;
 import com.ceylon.trade.data.TradeManager;
 import com.ceylon.trade.util.MsgUtil;
 import org.bukkit.command.CommandSender;
@@ -13,9 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class TradeRequestCmd extends SubCommand {
-    private static final double NEARBY_SIZE_X = 10;
-    private static final double NEARBY_SIZE_Y = 30;
-    private static final double NEARBY_SIZE_Z = 10;
     private final TradeManager tradeManager;
 
     public TradeRequestCmd(Plugin plugin, String command, TradeManager tradeManager) {
@@ -35,12 +33,13 @@ public class TradeRequestCmd extends SubCommand {
         }
         Player player = (Player) sender;
         UUID requester = player.getUniqueId();
-        if(this.tradeManager.isRequester(requester)) {
-            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c이미 요청을 보낸 상태입니다.");
-            return true;
-        }
-        if(this.tradeManager.isResponder(requester)) {
-            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c당신은 요청을 받은 상태입니다.");
+        TradeData tradeData = this.tradeManager.getTradeData(requester);
+        if(tradeData != null) {
+            if(tradeData.getRequester().equals(requester)) {
+                MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c이미 요청을 보낸 상태입니다.");
+            } else {
+                MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c당신은 요청을 받은 상태입니다.");
+            }
             return true;
         }
         Player target = getPlugin().getServer().getPlayer(args.get(0));
@@ -49,11 +48,11 @@ public class TradeRequestCmd extends SubCommand {
             return true;
         }
         UUID responder = target.getUniqueId();
-        if(this.tradeManager.containTradeData(responder)) {
+        if(this.tradeManager.getTradeData(responder) != null) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c상대방이 교환 중인 상태입니다.");
             return true;
         }
-        List<Entity> nearbyPlayers = player.getNearbyEntities(TradeRequestCmd.NEARBY_SIZE_X, TradeRequestCmd.NEARBY_SIZE_Y, TradeRequestCmd.NEARBY_SIZE_Y);
+        List<Entity> nearbyPlayers = player.getNearbyEntities(TradePlugin.NEARBY_SIZE_X, TradePlugin.NEARBY_SIZE_Y, TradePlugin.NEARBY_SIZE_Y);
         if(!nearbyPlayers.contains(target)) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 " + args.get(0) + " (이)가 주변에 존재하지 않습니다.");
             return true;

@@ -20,31 +20,10 @@ public class TradeManager {
         this.tradeDataSet.remove(tradeData);
     }
 
-    public boolean containTradeData(UUID uuid) {
-        return this.isRequester(uuid) || this.isResponder(uuid);
-    }
-
-    public boolean isRequester(UUID requester) {
-        return this.getResponder(requester) != null;
-    }
-
-    public boolean isResponder(UUID responder) {
-        return this.getRequester(responder) != null;
-    }
-
-    public UUID getRequester(UUID responder) {
+    public TradeData getTradeData(UUID uuid) {
         for(TradeData tradeData : this.tradeDataSet) {
-            if(tradeData.getResponder().equals(responder)) {
-                return tradeData.getRequester();
-            }
-        }
-        return null;
-    }
-
-    public UUID getResponder(UUID requester) {
-        for(TradeData tradeData : this.tradeDataSet) {
-            if(tradeData.getRequester().equals(requester)) {
-                return tradeData.getResponder();
+            if(tradeData.getRequester().equals(uuid) || tradeData.getResponder().equals(uuid)) {
+                return tradeData;
             }
         }
         return null;
