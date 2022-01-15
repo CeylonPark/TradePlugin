@@ -12,7 +12,7 @@ public final class TradePlugin extends JavaPlugin {
     private final TradeManager tradeManager;
 
     public TradePlugin() {
-        this.tradeManager = new TradeManager();
+        this.tradeManager = new TradeManager(this);
     }
 
     @Override

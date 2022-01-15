@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TradeRequestCmd extends SubCommand {
     private static final double NEARBY_SIZE_X = 10;
@@ -29,31 +30,38 @@ public class TradeRequestCmd extends SubCommand {
             return true;
         }
         if(args.size() != 1) {
-            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /교환 요청");
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /교환 요청 <플레이어>");
             return true;
         }
         Player player = (Player) sender;
+        UUID requester = player.getUniqueId();
+        if(this.tradeManager.isRequester(requester)) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c이미 요청을 보낸 상태입니다.");
+            return true;
+        }
+        if(this.tradeManager.isResponder(requester)) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c당신은 요청을 받은 상태입니다.");
+            return true;
+        }
         Player target = getPlugin().getServer().getPlayer(args.get(0));
         if(target == null) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 "+args.get(0)+" (이)가 존재하지 않습니다.");
             return true;
         }
+        UUID responder = target.getUniqueId();
+        if(this.tradeManager.containTradeData(responder)) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c상대방이 교환 중인 상태입니다.");
+            return true;
+        }
         List<Entity> nearbyPlayers = player.getNearbyEntities(TradeRequestCmd.NEARBY_SIZE_X, TradeRequestCmd.NEARBY_SIZE_Y, TradeRequestCmd.NEARBY_SIZE_Y);
-        if(!nearbyPlayers.contains(player)) {
+        if(!nearbyPlayers.contains(target)) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 " + args.get(0) + " (이)가 주변에 존재하지 않습니다.");
             return true;
-
         }
-
-        //상황 고려 시발
-        // 타겟이 딴 놈한테 요청 받은 경우
-        // 이새끼가 요청을 보낸경우
-        // 그리고 쿨타임 만들어야댐
-        // 쿨타임을 20초로 하자. 몇초? 20초
-        // 그러면 어디서 쿨타임을 돌리냐
-        // 옛날의 나는 커맨드 클래스에서 바로 돌렸다.
-
-        //내일의 나에게 맡기자!
+        this.tradeManager.addTradeData(requester, responder);
+        MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 "+args.get(0)+" 에게 교환 요청을 보냈습니다.");
+        MsgUtil.sendMsg(target, TradePlugin.prefix + "§c플레이어 "+ sender.getName() +" 에게 교롼 요청을 받았습니다."
+                , "/교환 수락/거절");
         return true;
     }
 }
