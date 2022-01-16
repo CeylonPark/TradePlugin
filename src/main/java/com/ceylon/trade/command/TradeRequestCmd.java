@@ -32,6 +32,10 @@ public class TradeRequestCmd extends SubCommand {
             return true;
         }
         Player player = (Player) sender;
+        if(player.getName().equals(args.get(0))) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c자기 자신에게 요청할 수 없습니다.");
+            return true;
+        }
         UUID requester = player.getUniqueId();
         TradeData tradeData = this.tradeManager.getTradeData(requester);
         if(tradeData != null) {
@@ -58,9 +62,9 @@ public class TradeRequestCmd extends SubCommand {
             return true;
         }
         this.tradeManager.addTradeData(requester, responder);
-        MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 "+args.get(0)+" 에게 교환 요청을 보냈습니다.");
-        MsgUtil.sendMsg(target, TradePlugin.prefix + "§c플레이어 "+ sender.getName() +" 에게 교롼 요청을 받았습니다."
-                , "/교환 수락/거절");
+        MsgUtil.sendMsg(sender, TradePlugin.prefix + "플레이어 "+args.get(0)+" 에게 교환 요청을 보냈습니다.");
+        MsgUtil.sendMsg(target, TradePlugin.prefix + "플레이어 "+ sender.getName() +" 에게 교롼 요청을 받았습니다."
+                , TradePlugin.prefix + "교환 요청에 응답할 수 있습니다. (Usage: /교환 수락/거절)");
         return true;
     }
 }

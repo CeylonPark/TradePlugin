@@ -1,6 +1,7 @@
 package com.ceylon.trade;
 
 import com.ceylon.trade.command.TradeCommand;
+import com.ceylon.trade.command.TradeSignCommand;
 import com.ceylon.trade.data.TradeManager;
 import com.ceylon.trade.listener.TradeInventoryListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,8 +23,8 @@ public final class TradePlugin extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         Objects.requireNonNull(getCommand("교환")).setExecutor(new TradeCommand(this, "교환", this.tradeManager));
-        // 장사글 커맨드 등록
-        getServer().getPluginManager().registerEvents(new TradeInventoryListener(), this);
+        Objects.requireNonNull(getCommand("장사글")).setExecutor(new TradeSignCommand(this, "장사글", this.tradeManager));
+        getServer().getPluginManager().registerEvents(new TradeInventoryListener(this.tradeManager), this);
     }
 
     @Override

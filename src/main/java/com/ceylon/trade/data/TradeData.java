@@ -31,7 +31,7 @@ public class TradeData {
                 if(this.tick == 0) {
                     MsgUtil.sendMsg(TradeData.this.requester, TradePlugin.prefix + "§c요청이 만료되었습니다.");
                     MsgUtil.sendMsg(TradeData.this.responder, TradePlugin.prefix + "§c요청이 만료되었습니다.");
-                    cancel();
+                    TradeData.this.deleteTradeData();
                 }
                 this.tick--;
             }
@@ -52,5 +52,9 @@ public class TradeData {
             this.runnable.cancel();
         }
         this.tradeManager.removeTradeData(this);
+    }
+
+    public void onTrade() {
+        this.state = true;
     }
 }

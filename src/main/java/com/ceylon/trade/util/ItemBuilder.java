@@ -1,9 +1,11 @@
 package com.ceylon.trade.util;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,13 @@ public class ItemBuilder {
 
     public ItemBuilder addItemFlags(ItemFlag... itemFlags) {
         this.itemMeta.addItemFlags(itemFlags);
+        return this;
+    }
+
+    public ItemBuilder setOwningPlayer(OfflinePlayer offlinePlayer) {
+        if(this.itemStack.getType() == Material.PLAYER_HEAD) {
+            ((SkullMeta) this.itemMeta).setOwningPlayer(offlinePlayer);
+        }
         return this;
     }
 
