@@ -1,17 +1,21 @@
 package com.ceylon.trade.listener;
 
+import com.ceylon.trade.TradePlugin;
 import com.ceylon.trade.data.TradeData;
 import com.ceylon.trade.data.TradeManager;
+import com.ceylon.trade.util.MsgUtil;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class TradeInventoryListener implements Listener {
     private static final List<Integer> REQUESTER_PERMIT_SLOT = Arrays.asList(0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30);
@@ -37,7 +41,52 @@ public class TradeInventoryListener implements Listener {
         if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || (slot < 54 && (type == 0 ? !REQUESTER_PERMIT_SLOT.contains(slot) : !RESPONDER_PERMIT_SLOT.contains(slot)))) {
             event.setCancelled(true);
         }
-        // 47, 51 클릭 시 이벤트 처리, 블럭 바뀌거나 조건 만족하면 교환하기, 만약 플레이어 인벤에 가득찼으면 교환 취소
+
+        ItemStack itemStack = event.getInventory().getItem(type == 0 ? 47 : 51);
+        if(itemStack == null) {
+            event.setCancelled(true);
+            return;
+        }
+        if(itemStack.getType() == Material.LIME_CONCRETE) {
+            event.setCancelled(true);
+        }
+
+        if(type == 0 ? slot != 47 : slot != 51) {
+            return;
+        }
+
+        if(itemStack.getType() == Material.LIME_CONCRETE) {
+            event.getInventory().setItem(type == 0 ? 47 : 51, new ItemStack(Material.RED_CONCRETE));
+            return;
+        }
+        ItemStack itemStack2 = event.getInventory().getItem(type == 0 ? 51 : 47);
+        if(itemStack2 == null) {
+            return;
+        }
+        if(itemStack2.getType() == Material.LIME_CONCRETE) {
+            tradeData.deleteTradeData();
+            Player requester = Bukkit.getPlayer(tradeData.getRequester());
+            Player responder = Bukkit.getPlayer(tradeData.getResponder());
+            type = 0;
+            Inventory inv = event.getInventory();
+            for(Player player : new Player[]{requester, responder}) {
+                player.closeInventory();
+                for(int invSlot : type == 0 ? REQUESTER_PERMIT_SLOT : RESPONDER_PERMIT_SLOT) {
+                    ItemStack item = inv.getItem(invSlot);
+                    if (item == null) {
+                        continue;
+                    }
+                    if(type == 0) {
+                        responder.getInventory().addItem(item);
+                    } else {
+                        requester.getInventory().addItem(item);
+                    }
+                }
+                type++;
+            }
+        } else {
+            event.getInventory().setItem(type == 0 ? 47 : 51, new ItemStack(Material.LIME_CONCRETE));
+        }
     }
 
     @EventHandler
@@ -45,8 +94,37 @@ public class TradeInventoryListener implements Listener {
         if(!event.getView().getTitle().contains("교환")) {
             return;
         }
-        // 교환중인지 확인하고 교환 취소.
-        // 교환창에 있던 아이템 반납. 가득 찼으면 바닥에 떨구기
+
+        TradeData tradeData = this.tradeManager.getTradeData(event.getPlayer().getUniqueId());
+        if(tradeData == null) {
+            return;
+        }
+        tradeData.deleteTradeData();
+
+        Player[] players = new Player[] {
+                Bukkit.getPlayer(tradeData.getRequester()),
+                Bukkit.getPlayer(tradeData.getResponder())
+        };
+
+        for(int i = 0; i < players.length; i++) {
+            Player player = players[i];
+            if(player == null) {
+                continue;
+            }
+            player.closeInventory();
+            Location location = player.getLocation();
+            World world = location.getWorld();
+            Inventory inv = event.getInventory();
+            for(int slot : i == 0 ? REQUESTER_PERMIT_SLOT : RESPONDER_PERMIT_SLOT) {
+                ItemStack itemStack = inv.getItem(slot);
+                if(itemStack == null) {
+                    continue;
+                }
+                assert world != null;
+                world.dropItemNaturally(location, itemStack); // 인벤 또는 떨구기
+            }
+            MsgUtil.sendMsg(player, TradePlugin.prefix + "§c교환이 취소 되었습니다.");
+        }
     }
 
 

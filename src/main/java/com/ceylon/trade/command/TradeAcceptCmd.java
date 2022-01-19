@@ -72,7 +72,7 @@ public class TradeAcceptCmd extends SubCommand {
         }
 
         for(int slot : new int[]{47, 51}) {
-            ItemStack accept = new ItemBuilder(Material.LIGHT_GRAY_CONCRETE)
+            ItemStack accept = new ItemBuilder(Material.RED_CONCRETE)
                     .setDisplayName("§f클릭 시 거래를 수락합니다.")
                     .build();
             inv.setItem(slot, accept);
