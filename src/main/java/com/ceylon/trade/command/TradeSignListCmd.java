@@ -4,19 +4,16 @@ import com.ceylon.trade.TradePlugin;
 import com.ceylon.trade.api.SubCommand;
 import com.ceylon.trade.data.TradeManager;
 import com.ceylon.trade.util.MsgUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-public class TradeSignOpenCmd extends SubCommand {
+public class TradeSignListCmd extends SubCommand {
     private final TradeManager tradeManager;
 
-    public TradeSignOpenCmd(Plugin plugin, String command, TradeManager tradeManager) {
+    public TradeSignListCmd(Plugin plugin, String command, TradeManager tradeManager) {
         super(plugin, command);
         this.tradeManager = tradeManager;
     }
@@ -28,18 +25,19 @@ public class TradeSignOpenCmd extends SubCommand {
             return true;
         }
         if(args.size() != 1) {
-            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /장사글 열기)");
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /장사글 목록)");
             return true;
         }
-        Player player = (Player) sender;
-        Inventory inv = Bukkit.createInventory(player, 54, "장사글: 1");
-
-        List<ItemStack> list = this.tradeManager.getTradeSignList(0, 44);
-        for(int i = 0; i < list.size(); i++) {
-            inv.setItem(i, list.get(i));
+        List<String> list = this.tradeManager.getTradeSignList(((Player) sender).getUniqueId());
+        if(list.isEmpty()) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c작성하신 장사글이 없습니다.");
+            return true;
         }
-
-        player.openInventory(inv);
+        MsgUtil.sendMsg(sender, TradePlugin.prefix + "장사글 목록.");
+        for(String string : list) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "  - "+string);
+        }
+        MsgUtil.sendMsg(sender, " ");
         return true;
     }
 }

@@ -34,7 +34,7 @@ public class TradeManager {
     }
 
     public boolean addTradeSign(UUID registrant, String title, String contents) {
-        if(this.getTradeSign(title) != null) {
+        if(this.getTradeSign(title) == null) {
             this.tradeSignList.add(new TradeSign(registrant, title, contents));
             return true;
         }
@@ -67,6 +67,16 @@ public class TradeManager {
                         .addLore("§f")
                         .build();
                 list.add(itemStack);
+            }
+        }
+        return list;
+    }
+
+    public List<String> getTradeSignList(UUID registrant) {
+        List<String> list = new ArrayList<>();
+        for(TradeSign tradeSign : this.tradeSignList) {
+            if(tradeSign.getRegistrant().equals(registrant)) {
+                list.add(tradeSign.getTitle());
             }
         }
         return list;
