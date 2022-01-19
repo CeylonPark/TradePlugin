@@ -32,7 +32,11 @@ public class TradeSignAddCmd extends SubCommand {
         // 색깔 코드 삭제 ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', name))
         StringBuilder builder = new StringBuilder();
         for(int i = 1; i < args.size(); i++) {
-            builder.append(args.get(i));
+            if(i == 1) {
+                builder.append(args.get(i));
+                continue;
+            }
+            builder.append(" ").append(args.get(i));
         }
         if(this.tradeManager.addTradeSign(((Player) sender).getUniqueId(), title, builder.toString())) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "장사글 [ "+title+" ] 가 성공적으로 등록되었습니다.");
