@@ -4,7 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryChecker {
+import java.util.Map;
+
+public class InventoryUtil {
     public static boolean isFullInventory(Inventory inventory) {
         for(ItemStack itemStack : inventory.getStorageContents()) {
             if(itemStack == null) {
@@ -14,11 +16,11 @@ public class InventoryChecker {
         return true;
     }
     public static boolean isFullInventory(Player player) {
-        return InventoryChecker.isFullInventory(player.getInventory());
+        return InventoryUtil.isFullInventory(player.getInventory());
     }
     public static boolean isFullInventory(Inventory inventory, ItemStack allowItem) {
         if(allowItem.getAmount() == allowItem.getMaxStackSize()) {
-            return InventoryChecker.isFullInventory(inventory);
+            return InventoryUtil.isFullInventory(inventory);
         }
         for(ItemStack itemStack : inventory.getStorageContents()) {
             if(itemStack == null) {
@@ -30,7 +32,7 @@ public class InventoryChecker {
         return true;
     }
     public static boolean isFullInventory(Player player, ItemStack allowItem) {
-        return InventoryChecker.isFullInventory(player.getInventory(), allowItem);
+        return InventoryUtil.isFullInventory(player.getInventory(), allowItem);
     }
 
     public static boolean hasItemStack(Player player, ItemStack itemStack, int amount) {
@@ -48,11 +50,11 @@ public class InventoryChecker {
         return false;
     }
     public static boolean hasItemStack(Player player, ItemStack itemStack) {
-        return InventoryChecker.hasItemStack(player, itemStack, itemStack.getAmount());
+        return InventoryUtil.hasItemStack(player, itemStack, itemStack.getAmount());
     }
 
     public static boolean removeItemStack(Player player, ItemStack itemStack, int amount) {
-        if(InventoryChecker.hasItemStack(player, itemStack, amount)) {
+        if(InventoryUtil.hasItemStack(player, itemStack, amount)) {
             for(ItemStack playerItem : player.getInventory().getStorageContents()) {
                 if(playerItem != null && itemStack.isSimilar(playerItem)) {
                     if(playerItem.getAmount() >= amount) {
@@ -68,6 +70,14 @@ public class InventoryChecker {
         return false;
     }
     public static boolean removeItemStack(Player player, ItemStack itemStack) {
-        return InventoryChecker.removeItemStack(player, itemStack, itemStack.getAmount());
+        return InventoryUtil.removeItemStack(player, itemStack, itemStack.getAmount());
+    }
+
+    public static void giveItemOrDrop(Player player, ItemStack itemStack) {
+        Map<Integer, ItemStack> left = player.getInventory().addItem(itemStack);
+        if(left.isEmpty()) {
+            return;
+        }
+        player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
     }
 }

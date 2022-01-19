@@ -3,6 +3,7 @@ package com.ceylon.trade.listener;
 import com.ceylon.trade.TradePlugin;
 import com.ceylon.trade.data.TradeData;
 import com.ceylon.trade.data.TradeManager;
+import com.ceylon.trade.util.InventoryUtil;
 import com.ceylon.trade.util.MsgUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -77,9 +78,9 @@ public class TradeInventoryListener implements Listener {
                         continue;
                     }
                     if(type == 0) {
-                        responder.getInventory().addItem(item);
+                        InventoryUtil.giveItemOrDrop(responder, item);
                     } else {
-                        requester.getInventory().addItem(item);
+                        InventoryUtil.giveItemOrDrop(requester, item);
                     }
                 }
                 type++;
@@ -112,16 +113,12 @@ public class TradeInventoryListener implements Listener {
                 continue;
             }
             player.closeInventory();
-            Location location = player.getLocation();
-            World world = location.getWorld();
-            Inventory inv = event.getInventory();
             for(int slot : i == 0 ? REQUESTER_PERMIT_SLOT : RESPONDER_PERMIT_SLOT) {
-                ItemStack itemStack = inv.getItem(slot);
+                ItemStack itemStack = event.getInventory().getItem(slot);
                 if(itemStack == null) {
                     continue;
                 }
-                assert world != null;
-                world.dropItemNaturally(location, itemStack); // 인벤 또는 떨구기
+                InventoryUtil.giveItemOrDrop(player, itemStack);
             }
             MsgUtil.sendMsg(player, TradePlugin.prefix + "§c교환이 취소 되었습니다.");
         }

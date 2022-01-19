@@ -24,7 +24,7 @@ public class TradeSignListCmd extends SubCommand {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "플레이어만 사용 가능한 명령어입니다.");
             return true;
         }
-        if(args.size() != 1) {
+        if(args.size() != 0) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /장사글 목록)");
             return true;
         }

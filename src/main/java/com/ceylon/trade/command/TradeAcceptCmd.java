@@ -34,7 +34,7 @@ public class TradeAcceptCmd extends SubCommand {
             return true;
         }
         if(args.size() != 0) {
-            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /교환 수락/거절");
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /교환 수락/거부");
             return true;
         }
         Player responder = (Player) sender;

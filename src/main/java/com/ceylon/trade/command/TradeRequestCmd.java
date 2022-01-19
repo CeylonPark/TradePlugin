@@ -63,8 +63,8 @@ public class TradeRequestCmd extends SubCommand {
         }
         this.tradeManager.addTradeData(requester, responder);
         MsgUtil.sendMsg(sender, TradePlugin.prefix + "플레이어 "+args.get(0)+" 에게 교환 요청을 보냈습니다.");
-        MsgUtil.sendMsg(target, TradePlugin.prefix + "플레이어 "+ sender.getName() +" 에게 교롼 요청을 받았습니다."
-                , TradePlugin.prefix + "교환 요청에 응답할 수 있습니다. (Usage: /교환 수락/거절)");
+        MsgUtil.sendMsg(target, TradePlugin.prefix + "플레이어 "+ sender.getName() +" 에게 교환 요청을 받았습니다."
+                , TradePlugin.prefix + "교환 요청에 응답할 수 있습니다. (Usage: /교환 수락/거부)");
         return true;
     }
 }

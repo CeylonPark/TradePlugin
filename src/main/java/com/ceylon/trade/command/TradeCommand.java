@@ -14,7 +14,7 @@ public class TradeCommand extends CommandConstructor {
         super(plugin, command);
         registerSubCommand(new TradeRequestCmd(plugin, "요청", tradeManager));
         registerSubCommand(new TradeAcceptCmd(plugin, "수락", tradeManager));
-        registerSubCommand(new TradeRefusalCmd(plugin, "거절", tradeManager));
+        registerSubCommand(new TradeRefusalCmd(plugin, "거부", tradeManager));
     }
 
     @Override

@@ -60,7 +60,7 @@ public class TradeManager {
             for(int i = start; i < Math.min(end, this.tradeSignList.size()); i++) {
                 TradeSign tradeSign = this.tradeSignList.get(i);
                 ItemStack itemStack = new ItemBuilder(Material.BIRCH_SIGN)
-                        .setDisplayName("§"+tradeSign.getTitle())
+                        .setDisplayName("§f"+tradeSign.getTitle())
                         .addLore("§f")
                         .addLore("§a[등록자] §f: " + this.plugin.getServer().getOfflinePlayer(tradeSign.getRegistrant()).getName())
                         .addLore("§d[내용] §f: " + tradeSign.getContents())
