@@ -12,6 +12,10 @@ public class TradeSignCommand extends CommandConstructor {
 
     public TradeSignCommand(Plugin plugin, String command, TradeManager tradeManager) {
         super(plugin, command);
+        registerSubCommand(new TradeSignAddCmd(plugin, "등록", tradeManager));
+        registerSubCommand(new TradeSignRemoveCmd(plugin, "제거", tradeManager));
+        //목록
+        registerSubCommand(new TradeSignOpenCmd(plugin, "열기", tradeManager));
     }
 
     @Override

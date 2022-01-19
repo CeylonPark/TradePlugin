@@ -1,5 +1,8 @@
 package com.ceylon.trade.data;
 
+import com.ceylon.trade.util.ItemBuilder;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -7,6 +10,7 @@ import java.util.*;
 public class TradeManager {
     private final Plugin plugin;
     private final Set<TradeData> tradeDataSet = new HashSet<>();
+    private final List<TradeSign> tradeSignList = new ArrayList<>();
 
     public TradeManager(Plugin plugin) {
         this.plugin = plugin;
@@ -27,5 +31,44 @@ public class TradeManager {
             }
         }
         return null;
+    }
+
+    public boolean addTradeSign(UUID registrant, String title, String contents) {
+        if(this.getTradeSign(title) != null) {
+            this.tradeSignList.add(new TradeSign(registrant, title, contents));
+            return true;
+        }
+        return false;
+    }
+
+    public void removeTradeSign(TradeSign tradeSign) {
+        this.tradeSignList.remove(tradeSign);
+    }
+
+    public TradeSign getTradeSign(String title) {
+        for(TradeSign tradeSign : this.tradeSignList) {
+            if(tradeSign.getTitle().equals(title)) {
+                return tradeSign;
+            }
+        }
+        return null;
+    }
+
+    public List<ItemStack> getTradeSignList(int start, int end) {
+        List<ItemStack> list = new ArrayList<>();
+        if(start <= end && start < this.tradeSignList.size()) {
+            for(int i = start; i < Math.min(end, this.tradeSignList.size()); i++) {
+                TradeSign tradeSign = this.tradeSignList.get(i);
+                ItemStack itemStack = new ItemBuilder(Material.BIRCH_SIGN)
+                        .setDisplayName("§"+tradeSign.getTitle())
+                        .addLore("§f")
+                        .addLore("§a[등록자] §f: " + this.plugin.getServer().getOfflinePlayer(tradeSign.getRegistrant()).getName())
+                        .addLore("§d[내용] §f: " + tradeSign.getContents())
+                        .addLore("§f")
+                        .build();
+                list.add(itemStack);
+            }
+        }
+        return list;
     }
 }
