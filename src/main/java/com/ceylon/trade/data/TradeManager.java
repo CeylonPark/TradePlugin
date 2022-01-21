@@ -2,10 +2,16 @@ package com.ceylon.trade.data;
 
 import com.ceylon.trade.util.ItemBuilder;
 import org.bukkit.Material;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TradeManager {
     private final Plugin plugin;
@@ -57,7 +63,7 @@ public class TradeManager {
     public List<ItemStack> getTradeSignList(int start, int end) {
         List<ItemStack> list = new ArrayList<>();
         if(start <= end && start < this.tradeSignList.size()) {
-            for(int i = start; i < Math.min(end, this.tradeSignList.size()); i++) {
+            for(int i = start; i < Math.min(end+1, this.tradeSignList.size()); i++) {
                 TradeSign tradeSign = this.tradeSignList.get(i);
                 ItemStack itemStack = new ItemBuilder(Material.BIRCH_SIGN)
                         .setDisplayName("§f"+tradeSign.getTitle())
@@ -81,4 +87,40 @@ public class TradeManager {
         }
         return list;
     }
+
+    public void load() {
+        if(this.plugin.getDataFolder().mkdirs()) {
+            this.plugin.getLogger().info("플러그인 풀더가 생성되었습니다.");
+        }
+        File file = new File(this.plugin.getDataFolder(), "trade.yml");
+        FileConfiguration yml = YamlConfiguration.loadConfiguration(file);
+        MemorySection list = (MemorySection) yml.get("list");
+        if(list == null) {
+            return;
+        }
+        for(String path : list.getKeys(false)) {
+            TradeSign tradeSign = new TradeSign(
+                    UUID.fromString(Objects.requireNonNull(yml.getString("list."+path+".registrant"))),
+                    yml.getString("list."+path+".title"),
+                    yml.getString("list."+path+".contents"));
+            this.tradeSignList.add(tradeSign);
+        }
+    }
+
+    public void save() {
+        File file = new File(this.plugin.getDataFolder(), "trade.yml");
+        FileConfiguration yml = new YamlConfiguration();
+        for(int i = 0; i < this.tradeSignList.size(); i++) {
+            TradeSign tradeSign = this.tradeSignList.get(i);
+            yml.set("list."+i+".registrant", tradeSign.getRegistrant().toString());
+            yml.set("list."+i+".title", tradeSign.getTitle());
+            yml.set("list."+i+".contents", tradeSign.getContents());
+        }
+        try {
+            yml.save(file);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

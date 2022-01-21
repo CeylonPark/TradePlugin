@@ -38,6 +38,10 @@ public class TradeSignAddCmd extends SubCommand {
             }
             builder.append(" ").append(args.get(i));
         }
+        if(this.tradeManager.getTradeSignList(0, 44).size() > 44) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "장사글이 꽉차 등록할 수 없습니다.");
+            return true;
+        }
         if(this.tradeManager.addTradeSign(((Player) sender).getUniqueId(), title, builder.toString())) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "장사글 [ "+title+" ] 가 성공적으로 등록되었습니다.");
         } else {

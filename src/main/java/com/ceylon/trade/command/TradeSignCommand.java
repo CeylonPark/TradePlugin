@@ -41,7 +41,7 @@ public class TradeSignCommand extends CommandConstructor {
         String[] help = new String[] {
                 TradePlugin.prefix + "Usage:",
                 "  => /장사글 등록 <제목> <내용> - 장사글을 등록합니다.",
-                "  => /장사글 삭제 <제목> - 장사글을 삭제합니다.",
+                "  => /장사글 제거 <제목> - 장사글을 삭제합니다.",
                 "  => /장사글 목록 - 나의 장사글 목록을 확인합니다.",
                 "  => /장사글 열기 - 장사글 GUI를 엽니다.",
                 " "

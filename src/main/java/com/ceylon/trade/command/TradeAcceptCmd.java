@@ -55,7 +55,7 @@ public class TradeAcceptCmd extends SubCommand {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 "+requesterOffline.getName()+" 은 접속 중이지 않습니다.");
             return true;
         }
-        List<Entity> nearbyPlayers = responder.getNearbyEntities(TradePlugin.NEARBY_SIZE_X, TradePlugin.NEARBY_SIZE_Y, TradePlugin.NEARBY_SIZE_Y);
+        List<Entity> nearbyPlayers = responder.getNearbyEntities(TradePlugin.NEARBY_SIZE_X, TradePlugin.NEARBY_SIZE_Y, TradePlugin.NEARBY_SIZE_Z);
         if(!nearbyPlayers.contains(requester)) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 "+requesterOffline.getName()+" (이)가 주변에 존재하지 않습니다.");
             return true;

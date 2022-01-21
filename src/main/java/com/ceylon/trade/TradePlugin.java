@@ -23,6 +23,7 @@ public final class TradePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        this.tradeManager.load();
         Objects.requireNonNull(getCommand("교환")).setExecutor(new TradeCommand(this, "교환", this.tradeManager));
         Objects.requireNonNull(getCommand("장사글")).setExecutor(new TradeSignCommand(this, "장사글", this.tradeManager));
         getServer().getPluginManager().registerEvents(new TradeInventoryListener(this.tradeManager), this);
@@ -32,5 +33,6 @@ public final class TradePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        this.tradeManager.save();
     }
 }

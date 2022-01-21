@@ -56,7 +56,7 @@ public class TradeRequestCmd extends SubCommand {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c상대방이 교환 중인 상태입니다.");
             return true;
         }
-        List<Entity> nearbyPlayers = player.getNearbyEntities(TradePlugin.NEARBY_SIZE_X, TradePlugin.NEARBY_SIZE_Y, TradePlugin.NEARBY_SIZE_Y);
+        List<Entity> nearbyPlayers = player.getNearbyEntities(TradePlugin.NEARBY_SIZE_X, TradePlugin.NEARBY_SIZE_Y, TradePlugin.NEARBY_SIZE_Z);
         if(!nearbyPlayers.contains(target)) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c플레이어 " + args.get(0) + " (이)가 주변에 존재하지 않습니다.");
             return true;
