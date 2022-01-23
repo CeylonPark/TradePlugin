@@ -11,7 +11,6 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TradeManager {
     private final Plugin plugin;
@@ -78,7 +77,7 @@ public class TradeManager {
         return list;
     }
 
-    public List<String> getTradeSignList(UUID registrant) {
+    public List<String> getTradeSignListOfRegistrant(UUID registrant) {
         List<String> list = new ArrayList<>();
         for(TradeSign tradeSign : this.tradeSignList) {
             if(tradeSign.getRegistrant().equals(registrant)) {
@@ -86,6 +85,10 @@ public class TradeManager {
             }
         }
         return list;
+    }
+
+    public int getTradeSignListSize() {
+        return this.tradeSignList.size();
     }
 
     public void load() {

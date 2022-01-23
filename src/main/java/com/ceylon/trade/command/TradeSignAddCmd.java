@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TradeSignAddCmd extends SubCommand {
     private final TradeManager tradeManager;
@@ -28,6 +29,11 @@ public class TradeSignAddCmd extends SubCommand {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /장사글 등록 <제목> <내용>)");
             return true;
         }
+        UUID registrant = ((Player) sender).getUniqueId();
+        if(this.tradeManager.getTradeSignListOfRegistrant(registrant).size() > 3) {
+            MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c개인당 장사글 3개를 초과하실 수 없습니다!");
+            return true;
+        }
         String title = args.get(0);
         // 색깔 코드 삭제 ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', name))
         StringBuilder builder = new StringBuilder();
@@ -38,11 +44,7 @@ public class TradeSignAddCmd extends SubCommand {
             }
             builder.append(" ").append(args.get(i));
         }
-        if(this.tradeManager.getTradeSignList(0, 44).size() > 44) {
-            MsgUtil.sendMsg(sender, TradePlugin.prefix + "장사글이 꽉차 등록할 수 없습니다.");
-            return true;
-        }
-        if(this.tradeManager.addTradeSign(((Player) sender).getUniqueId(), title, builder.toString())) {
+        if(this.tradeManager.addTradeSign(registrant, title, builder.toString())) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "장사글 [ "+title+" ] 가 성공적으로 등록되었습니다.");
         } else {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c장사글 [ "+title+" ] 은 이미 존재하는 장사글입니다.");

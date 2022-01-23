@@ -14,7 +14,7 @@ public class TradeCommand extends CommandConstructor {
         super(plugin, command);
         registerSubCommand(new TradeRequestCmd(plugin, "요청", tradeManager));
         registerSubCommand(new TradeAcceptCmd(plugin, "수락", tradeManager));
-        registerSubCommand(new TradeRefusalCmd(plugin, "거부", tradeManager));
+        registerSubCommand(new TradeRefusalCmd(plugin, "거절", tradeManager));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class TradeCommand extends CommandConstructor {
         String[] help = new String[] {
                 TradePlugin.prefix + "Usage:",
                 "  => /교환 요청 <플레이어> - 근처에 있는 <플레이어>에게 요청을 보냅니다.",
-                "  => /교환 수락/거부 - 교환 요청을 수락/거부 합니다.",
+                "  => /교환 수락/거부 - 교환 요청을 수락/거절 합니다.",
                 " "
         };
         MsgUtil.sendMsg(sender, help);

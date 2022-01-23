@@ -28,7 +28,7 @@ public class TradeSignListCmd extends SubCommand {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c시용 방법이 잘못되었습니다. §f(Usage: /장사글 목록)");
             return true;
         }
-        List<String> list = this.tradeManager.getTradeSignList(((Player) sender).getUniqueId());
+        List<String> list = this.tradeManager.getTradeSignListOfRegistrant(((Player) sender).getUniqueId());
         if(list.isEmpty()) {
             MsgUtil.sendMsg(sender, TradePlugin.prefix + "§c작성하신 장사글이 없습니다.");
             return true;
